@@ -1,0 +1,380 @@
+The Waypoint API Documentation
+Table of Contents
+The Waypoint API Documentation.......................................................................................................1
+Response Codes..........................................................................................................................2
+Authentication.............................................................................................................................2
+Berths..........................................................................................................................................3
+All berths for a marina.......................................................................................................3
+A specific marina berth......................................................................................................4
+Register a berth..................................................................................................................5
+Updating a berth................................................................................................................6
+Unregister a berth..............................................................................................................6
+Available berths.................................................................................................................6
+Vacancies.....................................................................................................................................8
+All vacancies for a berth....................................................................................................8
+Mark berth vacant..............................................................................................................8
+Mark berth unavailable......................................................................................................8
+Berth Claims...............................................................................................................................9
+All claims for a marina berth.............................................................................................9
+Approve a berth claim.....................................................................................................10
+Reject a berth claim.........................................................................................................10
+Bookings....................................................................................................................................11
+All bookings for a marina................................................................................................11
+A specific marina booking...............................................................................................13Response Codes
+HTTP Status Codes are used to denote response success and reason for failure:
+200 OK
+401 Unauthorized
+403 Forbidden
+404 Not Found
+405 Method Not Allowed
+Authentication
+All requests must be authenticated using the API Authentication Token provided. This is a per
+marina entity. All requests take an auth_token parameter on the query string of the request.
+@example_request GET /some/request?auth_token=abcdefghijklmnopBerths
+All berths for a marina
+@url [GET] /api/v1/marinas/[marina_id]/berths
+@example_request GET /api/v1/marinas/5/berths
+@example_response 200 OK
+   [
+     {
+       id: 453,
+       code: 'A1',
+       dimensions: {
+         length: 12.0,
+         width: 4.8,
+         depth: 3
+       },
+       type: 'pontoon',
+       access: 'Walk ashore',
+       notes: "Please don't feed the sharks",
+       owner: {
+         id: 1023,
+         username: 'johnsmith',
+         email: 'john.smith@example.com',
+         first_name: 'John',
+         last_name: 'Smith',
+         address_1: '3 Waterside Park',
+         city: 'Shepperton',
+         postcode: 'TW17 OSO',
+         country: 'United Kingdom',
+         phone: '555 2342345',
+         url: "http://www.thewaypoint.com/users/johnsmith"
+       },
+       boat: {
+         id: 87,
+         name: 'Tabatha'
+       }
+       currency: 'GBP',       price: 40.0,
+       manager_url: "http://www.thewaypoint.com/managers/marina/berths/1023"
+     },
+     {
+       id: 209,
+       code: 'B7',
+       dimensions: {
+         length: 13.0,
+         width: 4.9,
+         depth: 4
+       },
+       currency: 'GBP',
+       price: 57.0,
+       manager_url: "http://www.thewaypoint.com/managers/marina/berths/209"
+     }
+   ]
+A specific marina berth
+@url [GET] /api/v1/marinas/[marina_id]/berths/[id]
+@example_request GET /api/v1/marinas/5/berths/453
+@example_response 200 OK
+   {
+     id: 453,
+     code: 'A1',
+     dimensions: {
+       length: 12.0,
+       width: 4.8,
+       depth: 3
+     },
+     type: 'pontoon',
+     access: 'Walk ashore',
+     notes: "Please don't feed the sharks",
+     owner: {
+       id: 1023,
+       username: 'johnsmith',
+       email: 'john.smith@example.com',
+       first_name: 'John',       last_name: 'Smith',
+       address_1: '3 Waterside Park',
+       city: 'Shepperton',
+       post_code: 'TW17 OSO',
+       country: 'United Kingdom',
+       phone: '555 2342345',
+       url: "http://www.thewaypoint.com/users/johnsmith"
+     },
+     boat: {
+       id: 87,
+       name: 'Tabatha'
+     }
+     currency: 'GBP',
+     price: 40.0,
+     manager_url: "http://www.thewaypoint.com/managers/marina/berths/1023"
+   }
+Register a berth
+@url [POST] /api/v1/marinas/[marina_id]/berths
+@example_request POST /api/v1/marinas/5/berths
+   {
+     code: 'B7',
+     dimensions: {
+       length: 12.0,
+       width: 4.8,
+       depth: 3
+     },
+     type: 'pontoon',
+     access: 'Walk ashore',
+     notes: "Please don't feed the sharks",
+     price: 10.6
+   }
+@example_response 200 OK
+   {
+     id: 2034
+   }Updating a berth
+@url [PUT] /api/v1/marinas/[marina_id]/berths/[id]
+@example_request PUT/api/v1/marinas/5/berths
+   {
+     notes: "Mind the gap.",
+     owner: null,
+     price: 20.7
+   }
+@example_response 200 OK
+   {
+     id: 2034
+   }
+Unregister a berth
+@url [DELETE] /api/v1/marinas/[marina_id]/berths/[id]
+@example_request DELETE /api/v1/marinas/5/berths
+@example_response 200 OK
+Available berths
+@url [GET] /api/v1/marinas/[marina_id]/berths/available?[arguments]
+@argument [Date] from Defaults to today
+@argument [Date] to Defaults to a year after from
+@example_request GET /api/v1/marinas/5/berths/453?from=2011-10-01&to=2011-10-30
+@example_response 200 OK
+   [
+     {
+       from: '2011-10-05',
+       to: '2011-10-12',
+       berth: {
+         id: 209,
+         code: 'A6'
+       },
+       currency: 'GBP',
+       price: 40.0
+     },
+     {
+       from: '2011-10-08',       to: '2011-10-24',
+       berth: {
+         id: 212,
+         code: 'B2'
+       },
+       currency: 'GBP',
+       price: 37.0
+     }  
+   ]Vacancies
+All vacancies for a berth
+@url [GET] /api/v1/marinas/[marina_id]/berths/[id]/vacancies
+@example_request GET /api/v1/marinas/5/berths/102/vacancies
+@example_response 200 OK
+   [
+     {
+       from: '2011-10-10',
+       to: '2011-10-14'
+     },
+     {
+       from: '2011-10-25',
+       to: '2011-10-30'
+     }
+   ]
+Mark berth vacant
+@url [POST] /api/v1/marinas/[marina_id]/berths/[id]/vacancies?[arguments]
+@argument [Date] from
+@argument [Date] to
+@example_request POST /api/v1/marinas/5/berths/102/vacancies?from=2011-10-10&to=2011-10-
+14
+@example_response 200 OK
+Mark berth unavailable
+@url [DELETE] /api/v1/marinas/[marina_id]/berths/[id]/vacancies?[arguments]
+@argument [Date] from
+@argument [Date] to
+@argument [Boolean] direct Indicate this is for a direct booking, and cannot be adjusted
+@example_request DELETE /api/v1/marinas/5/berths/102/vacancies?from=2011-10-10&to=2011-
+10-14
+@example_response 200 OKBerth Claims
+All claims for a marina berth
+@url [GET] /api/v1/marinas/[marina_id]/berth_claims
+@example_request GET /api/v1/marinas/5/berth_claims
+@example_response 200 OK
+   [
+     {
+       id: 492,
+       berth: {
+         id: 102
+       },
+       owner: {
+         id: 1023,
+         username: 'johnsmith',
+         email: 'john.smith@example.com',
+         first_name: 'John',
+         last_name: 'Smith',
+         address_1: '3 Waterside Park',
+         city: 'Shepperton',
+         post_code: 'TW17 OSO',
+         country: 'United Kingdom',
+         telephone: '555 2342345',
+         url: "http://www.thewaypoint.com/users/johnsmith"
+       },
+     },
+     {
+       id: 495,
+       berth: {
+         id: 102
+       },
+       owner: {
+         id: 1024,
+         username: 'janedoe',
+         email: 'jane.doe@example.com',
+         first_name: 'Jane',         last_name: 'Doe',
+         address_1: '4 Waterside Park',
+         city: 'Shepperton',
+         post_code: 'TW17 OSO',
+         country: 'United Kingdom',
+         telephone: '555 2342346',
+         url: "http://www.thewaypoint.com/users/janedoe"
+       }
+     }
+   ]
+Approve a berth claim
+@url [POST] /api/v1/marinas/[marina_id]/berth_claims/[id]/approve
+@example_request POST /api/v1/marinas/5/berth_claims/495/approve
+@example_response 200 OK
+Reject a berth claim
+@url [POST] /api/v1/marinas/[marina_id]/berth_claims/[id]/reject
+@example_request POST /api/v1/marinas/5/berth_claims/495/reject
+@example_response 200 OKBookings
+All bookings for a marina
+@url [GET] /api/v1/marinas/[marina_id]/bookings?[arguments]
+@argument [Date] from Defaults to today
+@argument [Date] to Defaults to a year after from
+@example_request GET /marinas/5/bookings?from=2011-10-01&to=2011-10-05
+@example_response 200 OK
+   [
+     {
+       id: 102,
+       first_night: '2011-10-10',
+       last_night: '2011-10-28',
+       user: {
+         id: 1023,
+         username: 'johnsmith',
+         email: 'john.smith@example.com',
+         first_name: 'John',
+         last_name: 'Smith',
+         address_1: '3 Waterside Park',
+         city: 'Shepperton',
+         postcode: 'TW17 OSO',
+         country: 'United Kingdom',
+         phone: '555 2342345'
+       },
+       boat: {
+         id: 87,
+         name: 'Tabatha',
+         dimensions: {
+           length: 12.0,
+           beam: 4.8,
+           draft: 3
+         }
+       }
+       nights: [
+         {           arriving_on: '2011-10-10', leaving_on: '2011-10-14',
+           berth: { id: 5, code: 'A3' }
+         },
+         {
+           arriving_on: '2011-10-27', leaving_on: '2011-10-28',
+           berth: { id: 7, code: 'A4' }
+         }
+       ],
+       currency: 'GBP',
+       price: '40.00',
+       paid: false
+     },
+     {
+       id: 209,
+       first_night: '2011-11-15',
+       last_night: '2011-11-17',
+       user: {
+         id: 1023,
+         username: 'johnsmith',
+         email: 'john.smith@example.com',
+         first_name: 'John',
+         last_name: 'Smith',
+         address_1: '3 Waterside Park',
+         city: 'Shepperton',
+         postcode: 'TW17 OSO',
+         country: 'United Kingdom',
+         phone: '555 2342345'
+       },
+       boat: {
+         id: 87,
+         name: 'Tabatha',
+         dimensions: {
+           length: 12.0,
+           beam: 4.8,
+           draft: 3
+         }
+       }       nights: [
+         {
+           arriving_on: '2011-11-15', leaving_on: '2011-11-17',
+           berth: { id: 5, code: 'A3' }
+         }
+       ],
+       currency: 'EUR',
+       price: '57.00',
+       paid: true
+     }
+   ]
+A specific marina booking
+@url [GET] /api/v1/marinas/[marina_id]/bookings/[id]
+@example_request GET /marinas/5/bookings/102
+@example_response 200 OK
+   {
+     id: 102,
+     first_night: '2011-10-10',
+     last_night: '2011-10-28',
+     user: {
+       id: 1023,
+       username: 'johnsmith',
+       email: 'john.smith@example.com',
+       first_name: 'John',
+       last_name: 'Smith',
+       address_1: '3 Waterside Park',
+       city: 'Shepperton',
+       postcode: 'TW17 OSO',
+       country: 'United Kingdom',
+       phone: '555 2342345'
+     },
+     boat: {
+       id: 87,
+       name: 'Tabatha',
+       dimensions: {
+         length: 12.0,         beam: 4.8,
+         draft: 3
+       }
+     }
+     nights: [
+       {
+         arriving_on: '2011-10-10', leaving_on: '2011-10-14',
+         berth: { id: 5, code: 'A3' }
+       },
+       {
+         arriving_on: '2011-10-27', leaving_on: '2011-10-28',
+         berth: { id: 7, code: 'A4' }
+       }
+     ],
+     currency: 'GBP',
+     price: '40.00',
+     paid: false
+   }
